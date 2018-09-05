@@ -22,7 +22,7 @@
 import Tests from '@/components/AptitudeTest/Tests.vue';
 
 export default {
-  data(){
+  data() {
     return {
       showTest: false,
       hideStartButton: false,
@@ -32,7 +32,7 @@ export default {
     Tests,
   },
   methods: {
-  }
+  },
 };
 </script>
 

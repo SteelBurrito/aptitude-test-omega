@@ -29,6 +29,23 @@
     </div>
 </template>
 
+<script>
+export default {
+  data() {
+    const testData = 'https://api.myjson.com/bins/16xpbg';
+    return {
+      testPage: false,
+      resultsPage: false,
+      title: '',
+      questions: [],
+      currentQuestion: 0,
+      answers: [],
+    };
+  },
+};
+</script>
+
+
 <style lang="scss" scoped>
 $color_1: #7b7b7b;
 $color_2: #000;
