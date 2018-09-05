@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/RSG.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <img alt="Vue logo" src="../assets/RSG_Resized.png">
+    <HelloWorld msg="Regional Manager"/>
   </div>
 </template>
 
@@ -16,3 +16,4 @@ export default {
   },
 };
 </script>
+
