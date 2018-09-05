@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <form class="control-group">
-            <h1>Radio buttons</h1>
+            <h1>Question here</h1>
             <label class="control control--radio">First radio
                 <input type="radio" name="radio" checked="checked"/>
                 <div class="control__indicator"></div>
@@ -49,7 +49,7 @@ $border_top_color_1: #000;
 $border_top_color_2: #ccc;
 
 .container {
-  width: 100%;
+  width: 40%;
   height: 100vh;
   display: flex;
   flex-wrap: wrap;

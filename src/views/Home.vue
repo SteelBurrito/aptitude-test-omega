@@ -9,7 +9,9 @@
           Lets Go!
         </button>
       </div>
-      <Tests v-if="showTest"></Tests>
+      <div class="testComponent" v-if="showTest">
+        <Tests></Tests>
+      </div>
     </div>
   </div>
 </template>
@@ -17,6 +19,7 @@
 <script>
 // @ is an alias to /src
 import Tests from '@/components/AptitudeTest/Tests.vue';
+
 export default {
   data(){
     return {
@@ -28,11 +31,6 @@ export default {
     Tests,
   },
   methods: {
-    hideStartButton(){
-      if (this.showTest === true) {
-        this.hideStartButton = true;
-      }
-    }
   }
 };
 </script>
@@ -95,5 +93,11 @@ export default {
     background-color: #d5d6d6;
     opacity: 1;
   }
+}
+.testComponent {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
 }
 </style>
