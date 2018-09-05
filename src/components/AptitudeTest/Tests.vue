@@ -1,39 +1,30 @@
 <template>
     <div class="container">
         <form class="control-group">
-            <h1>Question here</h1>
-            <label class="control control--radio">First radio
-                <input type="radio" name="radio" checked="checked"/>
-                <div class="control__indicator"></div>
-            </label>
-            <label class="control control--radio">Second radio
+            <h1>How is your day?</h1>
+            <label class="control control--radio">Good
                 <input type="radio" name="radio"/>
                 <div class="control__indicator"></div>
             </label>
-            <label class="control control--radio">Third radio
+            <label class="control control--radio">Not Good
                 <input type="radio" name="radio"/>
                 <div class="control__indicator"></div>
             </label>
-            <label class="control control--radio">Fourth radio
+            <label class="control control--radio">Mediocre
                 <input type="radio" name="radio"/>
                 <div class="control__indicator"></div>
             </label>
-            <label class="control control--radio">Fourth radio
+            <label class="control control--radio">Bad
                 <input type="radio" name="radio"/>
                 <div class="control__indicator"></div>
             </label>
-            <label class="control control--radio">Fourth radio
+            <label class="control control--radio">Very Bad
                 <input type="radio" name="radio"/>
                 <div class="control__indicator"></div>
             </label>
-            <!-- <label class="control control--radio">Disabled
-                <input type="radio" name="radio2" disabled="disabled"/>
-                <div class="control__indicator"></div>
-            </label>
-            <label class="control control--radio">Disabled & checked
-                <input type="radio" name="radio2" disabled="disabled" checked="checked"/>
-                <div class="control__indicator"></div>
-            </label> -->
+            <div class="button-container">
+                <button class="button -regular center">Next</button>
+            </div>
         </form>
     </div>
 </template>
@@ -50,7 +41,7 @@ $border_top_color_2: #ccc;
 
 .container {
   width: 40%;
-  height: 100vh;
+  height: 50%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -180,6 +171,65 @@ h1 {
         }
       }
     }
+  }
+}
+
+.button-container {
+  display: flex;
+  margin: 60px auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.button {
+  display: flex;
+  overflow: hidden;
+  margin: 10px;
+  padding: 12px 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 150ms linear;
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none !important;
+  text-transform: none;
+  text-transform: capitalize;
+  color: #fff;
+  border: 0 none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 160px;
+  box-shadow: 2px 5px 10px var(--color-smoke);
+  &:hover {
+    transition: all 150ms linear;
+    opacity: 0.85;
+  }
+  &:active {
+    transition: all 150ms linear;
+    opacity: 0.75;
+  }
+  &:focus {
+    outline: 1px dotted #959595;
+    outline-offset: -4px;
+  }
+}
+.button.-regular {
+  color: #202129;
+  background-color: #d3d0d0;
+  &:hover {
+    color: #202129;
+    background-color: #e1e2e2;
+    opacity: 1;
+  }
+  &:active {
+    background-color: #d5d6d6;
+    opacity: 1;
   }
 }
 </style>

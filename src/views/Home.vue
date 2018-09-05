@@ -10,6 +10,7 @@
         </button>
       </div>
       <div class="testComponent" v-if="showTest">
+        <!-- Use https://api.myjson.com/bins/16xpbg later to test -->
         <Tests></Tests>
       </div>
     </div>
@@ -83,7 +84,7 @@ export default {
 }
 .button.-regular {
   color: #202129;
-  background-color: #f2f2f2;
+  background-color: #d3d0d0;
   &:hover {
     color: #202129;
     background-color: #e1e2e2;
@@ -97,6 +98,7 @@ export default {
 .testComponent {
   display: flex;
   width: 100%;
+  height: 100vh;
   flex-direction: row;
   justify-content: center;
 }
