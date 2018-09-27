@@ -1,27 +1,13 @@
 <template>
     <div class="container">
         <form class="control-group">
-            <h1>How is your day?</h1>
-            <label class="control control--radio">Good
+            <h1>{{ testQuestions[currentQuestion] }}</h1>
+            <div v-for="(q, key, index) in mcq" :key="index">
+              <label class="control control--radio">{{ q }}
                 <input type="radio" name="radio"/>
                 <div class="control__indicator"></div>
-            </label>
-            <label class="control control--radio">Not Good
-                <input type="radio" name="radio"/>
-                <div class="control__indicator"></div>
-            </label>
-            <label class="control control--radio">Mediocre
-                <input type="radio" name="radio"/>
-                <div class="control__indicator"></div>
-            </label>
-            <label class="control control--radio">Bad
-                <input type="radio" name="radio"/>
-                <div class="control__indicator"></div>
-            </label>
-            <label class="control control--radio">Very Bad
-                <input type="radio" name="radio"/>
-                <div class="control__indicator"></div>
-            </label>
+              </label>
+            </div>
             <div class="button-container">
                 <button class="button -regular center">Next</button>
             </div>
@@ -32,16 +18,49 @@
 <script>
 export default {
   data() {
-    const testData = 'https://api.myjson.com/bins/16xpbg';
     return {
       testPage: false,
       resultsPage: false,
-      title: '',
-      questions: [],
+      positionApplied: '',
+      test: [],
+      testQuestions: [],
       currentQuestion: 0,
       answers: [],
+      questionToDisplay: [],
+      response: [],
+      mcq: [],
+      minuteExpiry: Number,
     };
   },
+  props: ['token'],
+  created() {
+    this.DisplayTest();
+    // console.log(this.test);
+  },
+  methods: {
+    // DecodeTokenForTest(token){
+    //   let tokenToDecode = this.token;
+    // },
+    DisplayTest() {
+      this.$store.dispatch("TEST_SAMPLE").then(
+        res => {
+          this.test = this.$store.state.tests;
+
+          for (let i = 0; i < this.test.questions.length; i++) {
+            this.testQuestions.push(this.test.questions[i].question);
+            this.answers.push(this.test.questions[i].answers);
+          }
+          this.mcq = this.answers[this.currentQuestion];
+          console.log(this.answers[0]);
+          console.log(this.testQuestions);
+          // console.log(this.questionToDisplay);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
+  }
 };
 </script>
 

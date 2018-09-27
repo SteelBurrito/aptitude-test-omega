@@ -3,15 +3,14 @@
     <img alt="Vue logo" src="../assets/RSG_Resized.png">
     <div class="hello">
       <h1>Aptitude Test For:</h1>
-      <h1>Regional Manager</h1>
+      <h1>{{ tests.positionApplied }}</h1>
       <div class="button-container" v-show="!hideStartButton">
         <button class='button -regular center' @click="showTest=true; hideStartButton=true">
           Lets Go!
         </button>
       </div>
       <div class="testComponent" v-if="showTest">
-        <!-- Use https://api.myjson.com/bins/16xpbg later to test -->
-        <Tests></Tests>
+        <TestComponent></TestComponent>
       </div>
     </div>
   </div>
@@ -19,20 +18,38 @@
 
 <script>
 // @ is an alias to /src
-import Tests from '@/components/AptitudeTest/Tests.vue';
+import TestComponent from "@/components/AptitudeTest/Tests.vue";
 
 export default {
   data() {
     return {
       showTest: false,
       hideStartButton: false,
+      tests: [],
+      title: ""
     };
   },
+  props: ["token"],
   components: {
-    Tests,
+    TestComponent,
+  },
+  mounted() {
+    this.displayTitle();
   },
   methods: {
-  },
+    displayTitle() {
+      let testToDisplay = [];
+      this.$store.dispatch("TEST_SAMPLE").then(
+        res => {
+          testToDisplay = this.$store.state.tests;
+          this.tests = testToDisplay;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
+  }
 };
 </script>
 

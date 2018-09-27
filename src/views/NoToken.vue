@@ -1,5 +1,5 @@
 <template>
   <div class="about">
-    <h1>Welcome to ReadySetGo Aptitude Test!</h1>
+    <h1>No token, must be a Minnesotan</h1>
   </div>
 </template>
