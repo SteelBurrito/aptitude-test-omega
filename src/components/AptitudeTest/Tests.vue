@@ -1,17 +1,23 @@
 <template>
-    <div class="container">
-        <form class="control-group">
+    <div class='container'>
+      <div class='test-container'>
+        <form class='control-group'>
+            <p>Question {{ currentQuestion + 1 }} of {{ testQuestions.length }}</p>
             <h1>{{ testQuestions[currentQuestion] }}</h1>
-            <div v-for="(q, key, index) in mcq" :key="index">
-              <label class="control control--radio">{{ q }}
-                <input type="radio" name="radio"/>
-                <div class="control__indicator"></div>
+            <div v-for='(q, key, index) in mcq' :key='index'>
+              <label class='control control--radio'>
+                 {{ q }}
+                <input type='radio' name='radio'  v-bind:value ='q'>
+                <div class='control__indicator'></div>
               </label>
             </div>
-            <div class="button-container">
-                <button class="button -regular center">Next</button>
+            <div class='button-container'>
+                <button type = 'button' class='button -regular center' v-if='currentQuestion < (testQuestions.length - 1)' v-on:click='NextQuestion()'>Next Question</button>
+                <button type = 'button' class='button -regular center' v-if='currentQuestion > 0' v-on:click='PreviousQuestion()'>Previous Question</button>
+                <button class='button -submit center' v-show='submitButton'> Submit Results </button>
             </div>
         </form>
+      </div>
     </div>
 </template>
 
@@ -19,67 +25,89 @@
 export default {
   data() {
     return {
-      testPage: false,
-      resultsPage: false,
-      positionApplied: '',
+      submitButton: false,
       test: [],
       testQuestions: [],
       currentQuestion: 0,
       answers: [],
+      answersToSubmit: [],
       questionToDisplay: [],
       response: [],
       mcq: [],
-      minuteExpiry: Number,
     };
   },
   props: ['token'],
   created() {
     this.DisplayTest();
-    // console.log(this.test);
   },
   methods: {
-    // DecodeTokenForTest(token){
-    //   let tokenToDecode = this.token;
-    // },
+    ShowSubmitButton() {
+      if ((this.currentQuestion + 1) === this.testQuestions.length) {
+        return this.submitButton = true
+      }
+      else {
+        return this.submitButton = false
+      }
+    },
     DisplayTest() {
-      this.$store.dispatch("TEST_SAMPLE").then(
+      this.$store.dispatch('TEST_SAMPLE').then(
         res => {
           this.test = this.$store.state.tests;
-
           for (let i = 0; i < this.test.questions.length; i++) {
             this.testQuestions.push(this.test.questions[i].question);
             this.answers.push(this.test.questions[i].answers);
           }
           this.mcq = this.answers[this.currentQuestion];
-          console.log(this.answers[0]);
-          console.log(this.testQuestions);
-          // console.log(this.questionToDisplay);
         },
         err => {
           console.log(err);
         }
       );
-    }
-  }
+    },
+    NextQuestion() {
+      if (this.currentQuestion < (this.testQuestions.length - 1 ))
+      {
+        this.currentQuestion ++;
+        this.mcq = this.answers[this.currentQuestion];
+      }
+      this.ShowSubmitButton();
+    },
+    PreviousQuestion() {
+      if (this.currentQuestion > 0)
+      {
+        this.currentQuestion --;
+        this.mcq = this.answers[this.currentQuestion];
+      }
+      this.ShowSubmitButton();
+    },
+  },
 };
 </script>
 
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 $color_1: #7b7b7b;
 $color_2: #000;
-$font_family_1: "Source Sans Pro", sans-serif;
-$font_family_2: "Alegreya Sans", sans-serif;
+$font_family_1: 'Source Sans Pro', sans-serif;
+$font_family_2: 'Alegreya Sans', sans-serif;
 $border_color_1: #7b7b7b;
 $border_color_2: #7b7b7b transparent transparent transparent;
 $border_top_color_1: #000;
 $border_top_color_2: #ccc;
 
 .container {
-  width: 40%;
-  height: 50%;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+}
+.test-container {
+  width: 70%;
+  height: 70%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -92,12 +120,15 @@ h1 {
 }
 .control-group {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   vertical-align: top;
   text-align: left;
+  align-items: normal;
+  justify-content: space-evenly;
   padding: 30px;
   height: 100%;
-  width: 100vh;
+  width: 100%;
   margin: 10px;
 }
 .control {
@@ -160,7 +191,7 @@ h1 {
   width: 20px;
   background: #e6e6e6;
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     display: none;
   }
@@ -212,7 +243,6 @@ h1 {
 
 .button-container {
   display: flex;
-  margin: 60px auto;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -240,7 +270,6 @@ h1 {
   appearance: none;
   justify-content: center;
   align-items: center;
-  flex: 0 0 160px;
   box-shadow: 2px 5px 10px var(--color-smoke);
   &:hover {
     transition: all 150ms linear;
@@ -261,6 +290,19 @@ h1 {
   &:hover {
     color: #202129;
     background-color: #e1e2e2;
+    opacity: 1;
+  }
+  &:active {
+    background-color: #d5d6d6;
+    opacity: 1;
+  }
+}
+.button.-submit {
+  color: #202129;
+  background-color: #23b8f3;
+  &:hover {
+    color: #202129;
+    background-color: #5ca9c7;
     opacity: 1;
   }
   &:active {

@@ -9,7 +9,6 @@ const state = {
   testToken: '',
   tests: [],
   testID: '',
-  tokenCreation: '',
   tokenExpiry: '',
 };
 
@@ -20,8 +19,7 @@ const mutations = {
   SET_TEST_TOKEN(state, token) {
     state.testToken = token;
   },
-  RECEIVE_TOKEN_EXPIRY_TIME(state, iat, exp) {
-    state.tokenCreation = iat;
+  RECEIVE_TOKEN_EXPIRY_TIME(state, exp) {
     state.tokenExpiry = exp;
   },
 };
@@ -54,7 +52,7 @@ const actions = {
   GET_TOKEN_EXPIRATION({ commit }, token) {
     return new Promise((resolve, reject) => {
       jwt.decode(token).then((res) => {
-        commit('RECEIVE_TOKEN_EXPIRY_TIME', res.iat, res.exp);
+        commit('RECEIVE_TOKEN_EXPIRY_TIME', res.exp);
         resolve(res);
       }, (err) => {
         reject(err);

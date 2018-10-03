@@ -26,10 +26,10 @@ export default {
       showTest: false,
       hideStartButton: false,
       tests: [],
-      title: ""
+      title: ''
     };
   },
-  props: ["token"],
+  props: ['token'],
   components: {
     TestComponent,
   },
