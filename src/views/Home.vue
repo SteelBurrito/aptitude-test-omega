@@ -1,15 +1,21 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/RSG_Resized.png">
-    <div class="hello">
+  <div class='home'>
+    <img alt='Vue logo' src='../assets/logo.png'>
+    <div class="token-check" v-if='!tokenValid && !tokenInvalid'>
+      <img src='../assets/text-animation-1s-457x63px.gif'>
+    </div>
+    <div class="token-invalid" v-show='tokenInvalid'>
+      <h1>Token Invalid!</h1>
+    </div>
+    <div class='hello' v-show='tokenValid'>
       <h1>Aptitude Test For:</h1>
-      <h1>{{ tests.positionApplied }}</h1>
-      <div class="button-container" v-show="!hideStartButton">
-        <button class='button -regular center' @click="showTest=true; hideStartButton=true">
+      <h1>{{ title }}</h1>
+      <div class='button-container' v-show='!hideStartButton'>
+        <button class='button -regular center' @click='showTest=true; hideStartButton=true'>
           Lets Go!
         </button>
       </div>
-      <div class="testComponent" v-if="showTest">
+      <div class='testComponent' v-if='showTest'>
         <TestComponent></TestComponent>
       </div>
     </div>
@@ -18,42 +24,41 @@
 
 <script>
 // @ is an alias to /src
-import TestComponent from "@/components/AptitudeTest/Tests.vue";
+import TestComponent from '@/components/AptitudeTest/Tests.vue';
 
 export default {
   data() {
     return {
       showTest: false,
       hideStartButton: false,
-      tests: [],
-      title: ''
+      tokenValid: false,
+      tokenInvalid: false,
+      URLtoken: this.token,
+      title: '',
     };
   },
+  // token taken from router parent component
   props: ['token'],
   components: {
     TestComponent,
   },
   mounted() {
-    this.displayTitle();
+    this.$store.commit('SET_TOKEN', this.URLtoken);
+    this.$store.dispatch('VERIFY_TOKEN_AND_RETRIEVE_TEST').then (
+        (res) => {
+            this.title = this.$store.state.tests.testTitle;
+            this.tokenValid = true;
+          },
+          (err) => {
+            this.tokenInvalid = true;
+            console.log(err);
+          },
+    );
   },
-  methods: {
-    displayTitle() {
-      let testToDisplay = [];
-      this.$store.dispatch("TEST_SAMPLE").then(
-        res => {
-          testToDisplay = this.$store.state.tests;
-          this.tests = testToDisplay;
-        },
-        err => {
-          console.log(err);
-        }
-      );
-    }
-  }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .button-container {
   display: flex;
   margin: 60px auto;

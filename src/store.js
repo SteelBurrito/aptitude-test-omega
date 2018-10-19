@@ -16,11 +16,17 @@ const mutations = {
   RECEIVE_TESTS(state, test) {
     state.tests = test;
   },
+  RECEIVE_TEST_ID(state, testid) {
+    state.testID = testid;
+  },
   SET_TEST_TOKEN(state, token) {
     state.testToken = token;
   },
   RECEIVE_TOKEN_EXPIRY_TIME(state, exp) {
     state.tokenExpiry = exp;
+  },
+  SET_TOKEN(state, token) {
+    state.testToken = token;
   },
 };
 
@@ -35,20 +41,34 @@ const actions = {
       });
     });
   },
-  // VERIFY_TOKEN({ commit }) {
-  //   return new Promise((resolve, reject) => {
-  //     axios.get('https://aptitudetestapibyome.ga/tests/applicant-aptitude-test/', {
-  //       params: {
-  //         token: state.testToken,
-  //       },
-  //     }).then((res) => {
-  //       commit('RECEIVE_TEST', res.data);
-  //       resolve(res);
-  //     }, (err) => {
-  //       reject(err);
-  //     });
-  //   });
-  // },
+  VERIFY_TOKEN_AND_RETRIEVE_TEST({ commit }) {
+    return new Promise((resolve, reject) => {
+      axios.get('https://aptitudetestapibyome.ga/tests/applicant-aptitude-test/', {
+        params: {
+          token: state.testToken,
+        },
+      }).then((res) => {
+        commit('RECEIVE_TEST', res.data);
+        resolve(res);
+      }, (err) => {
+        reject(err);
+      });
+    });
+  },
+  RETRIEVE_TEST({ commit }) {
+    return new Promise((resolve, reject) => {
+      axios.get('https://aptitudetestapibyome.ga/tests', {
+        params: {
+          testID: state.testID,
+        },
+      }).then((res) => {
+        commit('RECEIVE_TESTS', res.data);
+        resolve(res);
+      }, (err) => {
+        reject(err);
+      });
+    });
+  },
   GET_TOKEN_EXPIRATION({ commit }, token) {
     return new Promise((resolve, reject) => {
       jwt.decode(token).then((res) => {

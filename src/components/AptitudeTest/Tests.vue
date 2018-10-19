@@ -26,6 +26,7 @@ export default {
   data() {
     return {
       submitButton: false,
+      tokenValid: false,
       test: [],
       testQuestions: [],
       currentQuestion: 0,
@@ -36,22 +37,19 @@ export default {
       mcq: [],
     };
   },
+  // token taken from router parent component
   props: ['token'],
-  created() {
-    this.DisplayTest();
-  },
   methods: {
     ShowSubmitButton() {
       if ((this.currentQuestion + 1) === this.testQuestions.length) {
-        return this.submitButton = true
+        return this.submitButton = true;
       }
-      else {
-        return this.submitButton = false
-      }
+
+      return this.submitButton = false;
     },
     DisplayTest() {
       this.$store.dispatch('TEST_SAMPLE').then(
-        res => {
+        (res) => {
           this.test = this.$store.state.tests;
           for (let i = 0; i < this.test.questions.length; i++) {
             this.testQuestions.push(this.test.questions[i].question);
@@ -59,23 +57,36 @@ export default {
           }
           this.mcq = this.answers[this.currentQuestion];
         },
-        err => {
+        (err) => {
           console.log(err);
-        }
+        },
+      );
+    },
+    DisplayAptitudeTest(id) {
+      this.$store.dispatch('RETRIEVE_TEST').then(
+        (res) => {
+          this.test = this.$store.state.tests;
+          for (let i = 0; i < this.test.questions.length; i++) {
+            this.testQuestions.push(this.test.questions[i].question);
+            this.answers.push(this.test.questions[i].answers);
+          }
+          this.mcq = this.answers[this.currentQuestion];
+        },
+        (err) => {
+          console.log(err);
+        },
       );
     },
     NextQuestion() {
-      if (this.currentQuestion < (this.testQuestions.length - 1 ))
-      {
-        this.currentQuestion ++;
+      if (this.currentQuestion < (this.testQuestions.length - 1)) {
+        this.currentQuestion++;
         this.mcq = this.answers[this.currentQuestion];
       }
       this.ShowSubmitButton();
     },
     PreviousQuestion() {
-      if (this.currentQuestion > 0)
-      {
-        this.currentQuestion --;
+      if (this.currentQuestion > 0) {
+        this.currentQuestion--;
         this.mcq = this.answers[this.currentQuestion];
       }
       this.ShowSubmitButton();
