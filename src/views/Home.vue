@@ -42,17 +42,17 @@ export default {
   components: {
     TestComponent,
   },
-  mounted() {
+  created() {
     this.$store.commit('SET_TOKEN', this.URLtoken);
-    this.$store.dispatch('VERIFY_TOKEN_AND_RETRIEVE_TEST').then (
-        (res) => {
-            this.title = this.$store.state.tests.testTitle;
-            this.tokenValid = true;
-          },
-          (err) => {
-            this.tokenInvalid = true;
-            console.log(err);
-          },
+    this.$store.dispatch('VERIFY_TOKEN_AND_RETRIEVE_TEST').then(
+      (res) => {
+        this.title = this.$store.state.tests.testTitle;
+        this.tokenValid = true;
+      },
+      (err) => {
+        this.tokenInvalid = true;
+        console.log(err);
+      },
     );
   },
 };

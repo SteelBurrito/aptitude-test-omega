@@ -13,7 +13,7 @@ const state = {
 };
 
 const mutations = {
-  RECEIVE_TESTS(state, test) {
+  RECEIVE_TEST(state, test) {
     state.tests = test;
   },
   RECEIVE_TEST_ID(state, testid) {
@@ -43,10 +43,7 @@ const actions = {
   },
   VERIFY_TOKEN_AND_RETRIEVE_TEST({ commit }) {
     return new Promise((resolve, reject) => {
-      axios.get('https://aptitudetestapibyome.ga/tests/applicant-aptitude-test/', {
-        params: {
-          token: state.testToken,
-        },
+      axios.get(`https://aptitudetestapibyome.ga/tests/applicant-aptitude-test/${state.testToken}`, {
       }).then((res) => {
         commit('RECEIVE_TEST', res.data);
         resolve(res);

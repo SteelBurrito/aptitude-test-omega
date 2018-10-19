@@ -28,6 +28,7 @@ export default {
       submitButton: false,
       tokenValid: false,
       test: [],
+      tokenSubmission: this.token,
       testQuestions: [],
       currentQuestion: 0,
       answers: [],
@@ -39,43 +40,25 @@ export default {
   },
   // token taken from router parent component
   props: ['token'],
+  computed: {
+    RetrieveTestFromStore() {
+      return this.$store.state.tests;
+    }
+  },
+  created() {
+    this.test = this.RetrieveTestFromStore;
+    for (let i = 0; i < this.test.questions.length; i++) {
+      this.testQuestions.push(this.test.questions[i].question);
+      this.answers.push(this.test.questions[i].answers);
+    }
+    this.mcq = this.answers[this.currentQuestion];
+  },
   methods: {
     ShowSubmitButton() {
       if ((this.currentQuestion + 1) === this.testQuestions.length) {
         return this.submitButton = true;
       }
-
       return this.submitButton = false;
-    },
-    DisplayTest() {
-      this.$store.dispatch('TEST_SAMPLE').then(
-        (res) => {
-          this.test = this.$store.state.tests;
-          for (let i = 0; i < this.test.questions.length; i++) {
-            this.testQuestions.push(this.test.questions[i].question);
-            this.answers.push(this.test.questions[i].answers);
-          }
-          this.mcq = this.answers[this.currentQuestion];
-        },
-        (err) => {
-          console.log(err);
-        },
-      );
-    },
-    DisplayAptitudeTest(id) {
-      this.$store.dispatch('RETRIEVE_TEST').then(
-        (res) => {
-          this.test = this.$store.state.tests;
-          for (let i = 0; i < this.test.questions.length; i++) {
-            this.testQuestions.push(this.test.questions[i].question);
-            this.answers.push(this.test.questions[i].answers);
-          }
-          this.mcq = this.answers[this.currentQuestion];
-        },
-        (err) => {
-          console.log(err);
-        },
-      );
     },
     NextQuestion() {
       if (this.currentQuestion < (this.testQuestions.length - 1)) {
