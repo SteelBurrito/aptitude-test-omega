@@ -1,14 +1,5 @@
 <template>
-<div class="countdown">
-    <div class="block">
-      <p class="digit">00</p>
-      <p class="text">Minutes</p>
-    </div>
-    <div class="block">
-      <p class="digit">00</p>
-      <p class="text">Seconds</p>
-    </div>
-  </div>
+    <p>Test will expire in {{ display }}</p>
 </template>
 
 <script>
@@ -21,8 +12,13 @@ export default {
       display: '',
     };
   },
+  // computed: {
+  //   Minutes(){
+  //     const minutes = Math.floor
+  //   }
+  // }
   mounted() {
-
+    this.calculateTime();
   },
   methods: {
     calculateTime() {
@@ -34,10 +30,13 @@ export default {
         const msCurrentTime = Date.now();
         const msDifference = msExpired - msCurrentTime;
 
-        this.minutes = Math.floor(msDifference / 60000);
-        this.seconds = ((msDifference % 60000) / 1000).toFixed(0);
+        if (msDifference >= 0) {
+          this.minutes = Math.floor(msDifference / 60000);
+          this.seconds = ((msDifference % 60000) / 1000).toFixed(0);
 
-        this.display = `${this.minutes}:${this.seconds}`;
+          this.display = `${this.minutes} minutes and ${this.seconds} seconds`;
+        }
+
       }, (err) => {
         console.log(err);
       });

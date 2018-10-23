@@ -5,7 +5,7 @@
             <p>Question {{ currentQuestion + 1 }} of {{ testQuestions.length }}</p>
             <h1>{{ testQuestions[currentQuestion] }}</h1>
             <div v-for='(q, key, index) in mcq' :key='index'>
-              <label class='control control--radio'>
+              <label class='control controlradio'>
                  {{ q }}
                 <input type='radio' name='radio'  v-bind:value ='q'  v-model='response' v-on:click="StoreAnswer(q)">
                 <div class='control__indicator'></div>
@@ -28,7 +28,6 @@ export default {
       submitButton: false,
       tokenValid: false,
       test: [],
-      tokenSubmission: this.token,
       testQuestions: [],
       currentTestQuestion: '',
       currentQuestion: 0,
@@ -39,8 +38,6 @@ export default {
       mcq: [],
     };
   },
-  // token taken from router parent component
-  props: ['token'],
   computed: {
     RetrieveTestFromStore() {
       return this.$store.state.tests;
@@ -48,7 +45,7 @@ export default {
   },
   created() {
     this.test = this.RetrieveTestFromStore;
-    for (let i = 0; i < this.test.questions.length; i++) {
+    for (let i = 0; i < this.test.questions.length; i += 1) {
       this.testQuestions.push(this.test.questions[i].question);
       this.answers.push(this.test.questions[i].answers);
       this.answersToSubmit[i] = {
@@ -67,7 +64,7 @@ export default {
     },
     NextQuestion() {
       if (this.currentQuestion < (this.testQuestions.length - 1)) {
-        this.currentQuestion++;
+        this.currentQuestion += 1;
         this.currentTestQuestion = this.testQuestions[this.currentQuestion];
         this.mcq = this.answers[this.currentQuestion];
       }
@@ -75,7 +72,7 @@ export default {
     },
     PreviousQuestion() {
       if (this.currentQuestion > 0) {
-        this.currentQuestion--;
+        this.currentQuestion -= 1;
         this.currentTestQuestion = this.testQuestions[this.currentQuestion];
         this.mcq = this.answers[this.currentQuestion];
       }
@@ -83,8 +80,8 @@ export default {
     },
     StoreAnswer(res) {
       this.currentTestQuestion = this.testQuestions[this.currentQuestion];
-      for (let i=0; i < this.answersToSubmit.length; i++) {
-        if(this.answersToSubmit[i].question === this.currentTestQuestion) {
+      for (let i = 0; i < this.answersToSubmit.length; i += 1) {
+        if (this.answersToSubmit[i].question === this.currentTestQuestion) {
           this.answersToSubmit[i].answer = res;
           break;
         }
@@ -206,7 +203,7 @@ h1 {
     display: none;
   }
 }
-.control--radio {
+.controlradio {
   .control__indicator {
     border-radius: 50%;
     &:after {
@@ -228,7 +225,7 @@ h1 {
     }
   }
 }
-.control--checkbox {
+.controlcheckbox {
   .control__indicator {
     &:after {
       left: 8px;
@@ -280,7 +277,7 @@ h1 {
   appearance: none;
   justify-content: center;
   align-items: center;
-  box-shadow: 2px 5px 10px var(--color-smoke);
+  box-shadow: 2px 5px 10px var(color-smoke);
   &:hover {
     transition: all 150ms linear;
     opacity: 0.85;

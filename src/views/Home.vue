@@ -10,6 +10,7 @@
     <div class='hello' v-show='tokenValid'>
       <h1>Aptitude Test For:</h1>
       <h1>{{ title }}</h1>
+      <CountdownComponent></CountdownComponent>
       <div class='button-container' v-show='!hideStartButton'>
         <button class='button -regular center' @click='showTest=true; hideStartButton=true'>
           Lets Go!
@@ -25,6 +26,7 @@
 <script>
 // @ is an alias to /src
 import TestComponent from '@/components/AptitudeTest/Tests.vue';
+import CountdownComponent from '@/components/AptitudeTest/Countdown.vue';
 
 export default {
   data() {
@@ -41,6 +43,7 @@ export default {
   props: ['token'],
   components: {
     TestComponent,
+    CountdownComponent,
   },
   created() {
     this.$store.commit('SET_TOKEN', this.URLtoken);

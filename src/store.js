@@ -66,15 +66,9 @@ const actions = {
       });
     });
   },
-  GET_TOKEN_EXPIRATION({ commit }, token) {
-    return new Promise((resolve, reject) => {
-      jwt.decode(token).then((res) => {
-        commit('RECEIVE_TOKEN_EXPIRY_TIME', res.exp);
-        resolve(res);
-      }, (err) => {
-        reject(err);
-      });
-    });
+  GET_TOKEN_EXPIRATION({ commit }) {
+    const decodedToken = jwt.decode(state.testToken);
+    commit('RECEIVE_TOKEN_EXPIRY_TIME', decodedToken.exp);
   },
 };
 
