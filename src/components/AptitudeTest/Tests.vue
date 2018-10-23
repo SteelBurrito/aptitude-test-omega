@@ -7,7 +7,7 @@
             <div v-for='(q, key, index) in mcq' :key='index'>
               <label class='control control--radio'>
                  {{ q }}
-                <input type='radio' name='radio'  v-bind:value ='q'>
+                <input type='radio' name='radio'  v-bind:value ='q'  v-model='response' v-on:click="StoreAnswer(q)">
                 <div class='control__indicator'></div>
               </label>
             </div>
@@ -30,11 +30,12 @@ export default {
       test: [],
       tokenSubmission: this.token,
       testQuestions: [],
+      currentTestQuestion: '',
       currentQuestion: 0,
       answers: [],
       answersToSubmit: [],
       questionToDisplay: [],
-      response: [],
+      response: '',
       mcq: [],
     };
   },
@@ -43,13 +44,17 @@ export default {
   computed: {
     RetrieveTestFromStore() {
       return this.$store.state.tests;
-    }
+    },
   },
   created() {
     this.test = this.RetrieveTestFromStore;
     for (let i = 0; i < this.test.questions.length; i++) {
       this.testQuestions.push(this.test.questions[i].question);
       this.answers.push(this.test.questions[i].answers);
+      this.answersToSubmit[i] = {
+        question: this.testQuestions[i],
+        answer: '',
+      };
     }
     this.mcq = this.answers[this.currentQuestion];
   },
@@ -63,6 +68,7 @@ export default {
     NextQuestion() {
       if (this.currentQuestion < (this.testQuestions.length - 1)) {
         this.currentQuestion++;
+        this.currentTestQuestion = this.testQuestions[this.currentQuestion];
         this.mcq = this.answers[this.currentQuestion];
       }
       this.ShowSubmitButton();
@@ -70,9 +76,19 @@ export default {
     PreviousQuestion() {
       if (this.currentQuestion > 0) {
         this.currentQuestion--;
+        this.currentTestQuestion = this.testQuestions[this.currentQuestion];
         this.mcq = this.answers[this.currentQuestion];
       }
       this.ShowSubmitButton();
+    },
+    StoreAnswer(res) {
+      this.currentTestQuestion = this.testQuestions[this.currentQuestion];
+      for (let i=0; i < this.answersToSubmit.length; i++) {
+        if(this.answersToSubmit[i].question === this.currentTestQuestion) {
+          this.answersToSubmit[i].answer = res;
+          break;
+        }
+      }
     },
   },
 };
