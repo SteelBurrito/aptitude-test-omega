@@ -46,15 +46,16 @@ export default {
     CountdownComponent,
   },
   created() {
-    this.$store.commit('SET_TOKEN', this.URLtoken);
+    if (this.$store.state.testToken === '') {
+      this.$store.commit('SET_TOKEN', this.URLtoken);
+    }
     this.$store.dispatch('VERIFY_TOKEN_AND_RETRIEVE_TEST').then(
       (res) => {
-        this.title = this.$store.state.tests.testTitle;
+        this.title = this.$store.state.tests.positionApplied;
         this.tokenValid = true;
       },
       (err) => {
         this.tokenInvalid = true;
-        console.log(err);
       },
     );
   },

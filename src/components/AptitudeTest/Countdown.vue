@@ -32,17 +32,15 @@ export default {
       });
     },
     Calculate() {
-      let msCurrentTime = Date.now();
+      const msCurrentTime = Date.now();
       const msDifference = this.msExpired - msCurrentTime;
       if (msDifference >= 0) {
-        let minutes = Math.floor(msDifference / 60000);
-        let seconds = ((msDifference % 60000) / 1000).toFixed(0);
+        const minutes = Math.floor(msDifference / 60000);
+        const seconds = ((msDifference % 60000) / 1000).toFixed(0);
         // Return string to display
         return this.display = `${minutes} minutes and ${seconds} seconds`;
-      } else {
-        return;
       }
-    }
+    },
   },
 };
 </script>

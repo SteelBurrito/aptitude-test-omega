@@ -12,8 +12,8 @@
               </label>
             </div>
             <div class='button-container'>
-                <button type = 'button' class='button -regular center' v-if='currentQuestion < (testQuestions.length - 1)' v-on:click='NextQuestion()'>Next Question</button>
                 <button type = 'button' class='button -regular center' v-if='currentQuestion > 0' v-on:click='PreviousQuestion()'>Previous Question</button>
+                <button type = 'button' class='button -regular center' v-if='currentQuestion < (testQuestions.length - 1)' v-on:click='NextQuestion()'>Next Question</button>
                 <button class='button -submit center' v-show='submitButton'> Submit Results </button>
             </div>
         </form>

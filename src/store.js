@@ -70,6 +70,16 @@ const actions = {
     const decodedToken = jwt.decode(state.testToken);
     commit('RECEIVE_TOKEN_EXPIRY_TIME', decodedToken.exp);
   },
+  GENERATE_SAMPLE_TOKEN({ commit }) {
+    return new Promise((resolve, reject) => {
+      axios.get('https://aptitudetestapibyome.ga/applicants/generate/5b9b1781174fb73f788f312a').then((res) => {
+        commit('SET_TOKEN', res.data.token);
+        resolve(res);
+      }, (err) => {
+        reject(err);
+      });
+    });
+  },
 };
 
 const store = new Vuex.Store({
