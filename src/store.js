@@ -10,6 +10,7 @@ const state = {
   tests: [],
   testID: '',
   tokenExpiry: '',
+  sampleApplicant: '',
 };
 
 const mutations = {
@@ -28,13 +29,41 @@ const mutations = {
   SET_TOKEN(state, token) {
     state.testToken = token;
   },
+  SET_APPLICANT_SAMPLE(state, applicant) {
+    state.sampleApplicant = applicant;
+  },
 };
 
 const actions = {
-  TEST_SAMPLE({ commit }) {
+  CREATE_SAMPLE_APPLICANT({ commit }, applicant) {
     return new Promise((resolve, reject) => {
-      axios.get('https://aptitudetestapibyome.ga/tests/5b9b36adb3ae9b33042a928a').then((res) => {
-        commit('RECEIVE_TESTS', res.data);
+      axios.post('https://aptitudetestapibyome.ga/applicants', {
+        name: applicant.name,
+        jobtitleApplied: applicant.jobtitleApplied,
+        email: applicant.email,
+      }).then((res) => {
+        commit('SET_APPLICANT_SAMPLE', res.data);
+        resolve(res);
+      }, (err) => {
+        reject(err);
+      });
+    });
+  },
+  ASSIGN_SAMPLE_APPLICANT_TEST() {
+    return new Promise((resolve, reject) => {
+      axios.put(`https://aptitudetestapibyome.ga/applicants/${state.sampleApplicant._id}`, {
+        aptitudeTest: '5bd3a833b123f42368645bf6',
+      }).then((res) => {
+        resolve(res);
+      }, (err) => {
+        reject(err);
+      });
+    });
+  },
+  GENERATE_TOKEN({ commit }) {
+    return new Promise((resolve, reject) => {
+      axios.get(`https://aptitudetestapibyome.ga/applicants/generate/${state.sampleApplicant._id}`).then((res) => {
+        commit('SET_TOKEN', res.data.token);
         resolve(res);
       }, (err) => {
         reject(err);
@@ -59,7 +88,7 @@ const actions = {
           testID: state.testID,
         },
       }).then((res) => {
-        commit('RECEIVE_TESTS', res.data);
+        commit('RECEIVE_TESTS', res.data.id);
         resolve(res);
       }, (err) => {
         reject(err);

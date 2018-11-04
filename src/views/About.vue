@@ -1,27 +1,22 @@
 <template>
   <div class='about'>
-    <div class='welcome-text'>
-      <h1>Welcome to ReadySetGo Aptitude Test!</h1>
-      <h1>To access your aptitude test, please enter the link below into your address bar <br> and replace {token} with the provided token:</h1>
-      <h2>https://aptitudetest.online/#/aptitude-test/{token}</h2>
+    <div class="input-container">
+        <h2>Aptitude Test Demo</h2>
+        <div class="group">
+          <input type="text" id="name" required="required" v-model='sampleApplicant.name'/>
+          <label for="name">Enter your name here</label>
+          <div class="bar"></div>
+        </div>
     </div>
-    <div class='token-input'>
-      <h2>For demo purposes, we have created a sample applicant profile in our database.</h2>
-      <h2>Press the button below to generate the sample token from our sample profile.</h2>
-      <p>The token will only work for a limited time</p>
-      <div class='button-container'>
-        <button class='button -regular center' @click='LoadSampleToken()'>
-          Generate Token and Access Sample Test!
-        </button>
-      </div>
-    </div>
-    <h1 v-show="tokenInvalid">Token Invalid!</h1>
-    <div class = 'test-and-countdown' v-show="tokenValid">
-      <div class="countdown" v-if='showTest'>
+    <button class='button -regular center' @click='CreateSampleApplicant()'> Create Sample Applicant</button>
+    <p v-show="assignTestSuccess">Sample applicant successfully registered! Click <a class='test-link' @click='LoadToken()'>here</a> to start the test</p>
+    <h1 v-show='tokenInvalid'>Token Invalid!</h1>
+    <div class = 'test-and-countdown' v-show='tokenValid'>
+      <div class='countdown' v-if='showTest'>
         <CountdownComponent></CountdownComponent>
       </div>
-        <div class='testComponent' v-if='showTest'>
-      <TestComponent></TestComponent>
+      <div class='test-component' v-if='showTest'>
+        <TestComponent></TestComponent>
       </div>
     </div>
   </div>
@@ -38,6 +33,12 @@ export default {
       showTest: false,
       tokenValid: false,
       tokenInvalid: false,
+      assignTestSuccess: false,
+      sampleApplicant: {
+        name: '',
+        jobtitleApplied: 'Sample Applicant',
+        email: 'mailo@gmail.com',
+      },
     };
   },
   components: {
@@ -45,22 +46,33 @@ export default {
     CountdownComponent,
   },
   methods: {
-    LoadSampleToken(){
+    LoadToken() {
       // Must refactor later lol
-      this.$store.dispatch('GENERATE_SAMPLE_TOKEN').then(
-        (res) => {
-          this.$store.dispatch('VERIFY_TOKEN_AND_RETRIEVE_TEST'). then(
-            (res) => {
-              this.showTest = true;
-              this.tokenValid = true;
-              // this.tokenInput = this.$store.state.testToken;
-            },
-            (err) => {
-              this.tokenInvalid =  true;
-            }
-          );
-        }
-      )
+      this.$store.dispatch('GENERATE_TOKEN').then((res) => {
+        this.$store.dispatch('VERIFY_TOKEN_AND_RETRIEVE_TEST').then(
+          (res) => {
+            this.showTest = true;
+            this.tokenValid = true;
+            // this.tokenInput = this.$store.state.testToken;
+          },
+          (err) => {
+            this.tokenInvalid = true;
+          },
+        );
+      });
+    },
+    CreateSampleApplicant() {
+      if(this.sampleApplicant.name) {
+        return new Promise((resolve,reject) => {
+          this.$store.dispatch('CREATE_SAMPLE_APPLICANT',this.sampleApplicant)
+          .then((res) => {
+            this.$store.dispatch('ASSIGN_SAMPLE_APPLICANT_TEST');
+            this.assignTestSuccess =  true;
+            resolve(res);
+          })
+          .catch(reject);
+        });
+      }
     },
   },
 };
@@ -75,8 +87,28 @@ export default {
   height: 100vh;
 }
 
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.test-link {
+  color: red;
+}
+
+.applicant-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .welcome-text{
   width: 100%;
+  text-align: center;
 }
 
 .token-input {
@@ -117,7 +149,7 @@ export default {
   appearance: none;
   justify-content: center;
   align-items: center;
-  flex: 0 0 160px;
+  // flex: 0 0 160px;
   box-shadow: 2px 5px 10px var(--color-smoke);
   &:hover {
     transition: all 150ms linear;
@@ -146,5 +178,103 @@ export default {
     opacity: 1;
   }
 }
+
+.test-component {
+  padding: 1em;
+}
+
+$main-color: #F44336;
+$secondary-color: #A6C9AA;
+$main-color: white;
+$secondary-color: #76A97C;
+$width: 320px; // Change Me
+
+* {
+  box-sizing: border-box;
+}
+
+body {background: $main-color;}
+
+.group {
+  height: $width/5;
+  overflow: hidden;
+  position: relative;
+}
+
+label {
+  position: absolute;
+  top: $width/15;
+  color: #A6C9AA;
+  font: 400 $width/15 Roboto;
+  cursor: text;
+  transition: .25s ease;
+}
+
+input {
+  display: block;
+  width: 100%;
+  padding-top: $width/15;
+  border: none;
+  border-radius: 0; // For iOS
+  // border-bottom: solid $width/150 #A6C9AA;
+  color: rgb(109, 109, 109);
+  background: $main-color;
+  font-size: $width/15;
+  transition: .3s ease;
+  &:valid {
+    // border-bottom-color: #A6C9AA;
+    ~label {
+      top: 0;
+      font: 700 $width/25 Roboto;
+      color: #A6C9AA;
+    }
+  }
+  &:focus {
+    outline: none;
+    // border-bottom-color: $secondary-color;
+    ~label {
+      top: 0;
+      font: 700 $width/25 Roboto;
+      color: $secondary-color;
+    }
+    
+      
+    ~ .bar:before {
+    transform: translateX(0);
+    }
+  }
+
+  // Stop Chrome's hideous pale yellow background on auto-fill
+  
+  &:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px $main-color inset;
+    -webkit-text-fill-color: white !important;
+    // border-bottom-color: #A6C9AA;
+  }
+}
+
+.bar {
+  // background: $secondary-color;
+  background: #A6C9AA;
+  content: '';
+  width: $width;
+  // height: $width/100;
+  height: $width/150;
+  // transform: translateX(-100%);
+  transition: .3s ease;
+  // margin-top: -2px;
+  //
+  position: relative;
+  &:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 150%;
+    background: $secondary-color;
+    transform: translateX(-100%);
+    
+  }
+}
+::selection {background: rgba($secondary-color, .3);}
 </style>
 

@@ -110,7 +110,6 @@ $border_top_color_2: #ccc;
   justify-content: center;
 }
 .test-container {
-  width: 70%;
   height: 70%;
   display: flex;
   flex-wrap: wrap;
@@ -133,7 +132,6 @@ h1 {
   text-align: left;
   align-items: normal;
   justify-content: space-evenly;
-  padding: 30px;
   height: 100%;
   width: 100%;
   margin: 10px;
