@@ -1,5 +1,6 @@
 <template>
     <div class='container'>
+      <CountdownComponent v-if="showTest"></CountdownComponent>
       <div class='test-container' v-if="showTest">
         <form class='control-group'>
             <p>Question {{ currentQuestion + 1 }} of {{ testQuestions.length }}</p>
@@ -31,6 +32,8 @@
 </template>
 
 <script>
+import CountdownComponent from '@/components/AptitudeTest/Countdown.vue';
+
 export default {
   data() {
     return {
@@ -48,6 +51,9 @@ export default {
       submissionSuccess: false,
       showTest: true,
     };
+  },
+  components: {
+    CountdownComponent,
   },
   computed: {
     RetrieveTestFromStore() {
@@ -76,18 +82,14 @@ export default {
     NextQuestion() {
       if (this.currentQuestion < (this.testQuestions.length - 1)) {
         this.currentQuestion += 1;
-        this.currentTestQuestion = this.testQuestions[this.currentQuestion];
-        this.mcq = this.answers[this.currentQuestion];
-        this.response = this.answersToSubmit[this.currentQuestion].answer;
+        this.LoadQuestion();
       }
       this.ShowSubmitButton();
     },
     PreviousQuestion() {
       if (this.currentQuestion > 0) {
         this.currentQuestion -= 1;
-        this.currentTestQuestion = this.testQuestions[this.currentQuestion];
-        this.mcq = this.answers[this.currentQuestion];
-        this.response = this.answersToSubmit[this.currentQuestion].answer;
+        this.LoadQuestion();
       }
       this.ShowSubmitButton();
     },
@@ -101,17 +103,22 @@ export default {
         }
       }
     },
-    SubmitAnswers(){
-      return new Promise((resolve,reject) => {
+    LoadQuestion() {
+      this.currentTestQuestion = this.testQuestions[this.currentQuestion];
+      this.mcq = this.answers[this.currentQuestion];
+      this.response = this.answersToSubmit[this.currentQuestion].answer;
+    },
+    SubmitAnswers() {
+      return new Promise((resolve, reject) => {
         this.$store.dispatch('SUBMIT_APPLICANT_ANSWERS', this.answersToSubmit)
-        .then((res) => {
-          this.showTest = false;
-          this.submissionSuccess = true;
-          resolve(res);
-        }, (err) => {
-          this.showTest = false;
-          this.submissionSuccess = false;
-        }).catch(reject);
+          .then((res) => {
+            this.showTest = false;
+            this.submissionSuccess = true;
+            resolve(res);
+          }, (err) => {
+            this.showTest = false;
+            this.submissionSuccess = false;
+          }).catch(reject);
       });
     },
   },
@@ -131,7 +138,7 @@ $border_top_color_2: #ccc;
 
 .container {
   height: 100%;
-  width: 100%;
+  flex-direction: column;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

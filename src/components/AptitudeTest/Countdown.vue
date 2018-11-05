@@ -1,5 +1,5 @@
 <template>
-    <p>Test will expire in {{ display }}</p>
+    <p class='countdown-font'>Test will expire in {{ display }}</p>
 </template>
 
 <script>

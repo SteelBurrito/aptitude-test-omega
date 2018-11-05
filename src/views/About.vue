@@ -8,15 +8,12 @@
           <div class='bar'></div>
         </div>
       <p>{{ emptyNameString }}</p>
-      <button v-if='applicantCreateButton' class='button -regular center' @click='CreateSampleApplicant()'> Create Sample Applicant</button>
+      <button v-if='applicantCreateButton' class='button -regular center' @click='loadingApplicant = true;CreateSampleApplicant()'> Create Sample Applicant</button>
+      <div class="loading-spinner" v-if='loadingApplicant'></div>
+      <p v-if='assignTestSuccess'>Sample applicant successfully registered! Click <a class='test-link' @click='LoadToken()'>here</a> to start the test</p>
     </div>
-    <div class="loading-spinner" v-if='loadingApplicant'></div>
-    <p v-if='assignTestSuccess'>Sample applicant successfully registered! Click <a class='test-link' @click='loadingApplicant = true; LoadToken()'>here</a> to start the test</p>
     <h1 v-show='tokenInvalid'>Token Invalid!</h1>
     <div class = 'test-and-countdown' v-show='tokenValid'>
-      <div class='countdown' v-if='showTest'>
-        <CountdownComponent></CountdownComponent>
-      </div>
       <div class='test-component' v-if='showTest'>
         <TestComponent></TestComponent>
       </div>
@@ -26,7 +23,6 @@
 
 <script>
 import TestComponent from '@/components/AptitudeTest/Tests.vue';
-import CountdownComponent from '@/components/AptitudeTest/Countdown.vue';
 
 export default {
   data() {
@@ -47,7 +43,6 @@ export default {
   },
   components: {
     TestComponent,
-    CountdownComponent,
   },
   methods: {
     LoadToken() {
@@ -74,8 +69,8 @@ export default {
             .then((res) => {
               this.$store.dispatch('ASSIGN_SAMPLE_APPLICANT_TEST');
               this.assignTestSuccess = true;
-              this.loadingApplicant = false;
               this.emptyNameString = '';
+              this.loadingApplicant = false;
               resolve(res);
             })
             .catch(reject);
@@ -356,7 +351,7 @@ input {
   animation-timing-function: linear;
   height: 30px;
   width: 30px;
-  border: 8px solid #ffffff;
+  border: 8px solid #76A97C;
   border-right-color: transparent;
   border-radius: 50%;
   display: inline-block;
