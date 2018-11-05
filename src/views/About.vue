@@ -10,7 +10,8 @@
       <p>{{ emptyNameString }}</p>
       <button v-if='applicantCreateButton' class='button -regular center' @click='CreateSampleApplicant()'> Create Sample Applicant</button>
     </div>
-    <p v-if='assignTestSuccess'>Sample applicant successfully registered! Click <a class='test-link' @click='LoadToken()'>here</a> to start the test</p>
+    <div class="loading-spinner" v-if='loadingApplicant'></div>
+    <p v-if='assignTestSuccess'>Sample applicant successfully registered! Click <a class='test-link' @click='loadingApplicant = true; LoadToken()'>here</a> to start the test</p>
     <h1 v-show='tokenInvalid'>Token Invalid!</h1>
     <div class = 'test-and-countdown' v-show='tokenValid'>
       <div class='countdown' v-if='showTest'>
@@ -35,6 +36,7 @@ export default {
       tokenInvalid: false,
       assignTestSuccess: false,
       applicantCreateButton: true,
+      loadingApplicant: false,
       emptyNameString: '',
       sampleApplicant: {
         name: '',
@@ -72,6 +74,7 @@ export default {
             .then((res) => {
               this.$store.dispatch('ASSIGN_SAMPLE_APPLICANT_TEST');
               this.assignTestSuccess = true;
+              this.loadingApplicant = false;
               this.emptyNameString = '';
               resolve(res);
             })
@@ -288,5 +291,76 @@ input {
   }
 }
 ::selection {background: rgba($secondary-color, .3);}
+
+// Loading spinner copied from: https://codepen.io/msisto/pen/LntJe
+@-webkit-keyframes rotate-forever {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-moz-keyframes rotate-forever {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotate-forever {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+.loading-spinner {
+  -webkit-animation-duration: 0.75s;
+  -moz-animation-duration: 0.75s;
+  animation-duration: 0.75s;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: rotate-forever;
+  -moz-animation-name: rotate-forever;
+  animation-name: rotate-forever;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-timing-function: linear;
+  animation-timing-function: linear;
+  height: 30px;
+  width: 30px;
+  border: 8px solid #ffffff;
+  border-right-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 </style>
 

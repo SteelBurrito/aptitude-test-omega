@@ -7,7 +7,7 @@
             <div v-for='(q, key, index) in mcq' :key='index'>
               <label class='control controlradio'>
                  {{ q }}
-                <input type='radio' name='radio'  v-bind:value ='q'  v-model='response' v-on:click="StoreAnswer(q)">
+                <input type='radio' name='radio' v-bind:value ='q' v-model='response' v-on:click="StoreAnswer(q)">
                 <div class='control__indicator'></div>
               </label>
             </div>
@@ -78,6 +78,7 @@ export default {
         this.currentQuestion += 1;
         this.currentTestQuestion = this.testQuestions[this.currentQuestion];
         this.mcq = this.answers[this.currentQuestion];
+        this.response = this.answersToSubmit[this.currentQuestion].answer;
       }
       this.ShowSubmitButton();
     },
@@ -86,6 +87,7 @@ export default {
         this.currentQuestion -= 1;
         this.currentTestQuestion = this.testQuestions[this.currentQuestion];
         this.mcq = this.answers[this.currentQuestion];
+        this.response = this.answersToSubmit[this.currentQuestion].answer;
       }
       this.ShowSubmitButton();
     },
@@ -94,6 +96,7 @@ export default {
       for (let i = 0; i < this.answersToSubmit.length; i += 1) {
         if (this.answersToSubmit[i].question === this.currentTestQuestion) {
           this.answersToSubmit[i].answer = res;
+          this.response = res;
           break;
         }
       }
