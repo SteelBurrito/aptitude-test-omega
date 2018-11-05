@@ -1,15 +1,16 @@
 <template>
   <div class='about'>
-    <div class="input-container">
+    <div class='input-container'>
         <h2>Aptitude Test Demo</h2>
-        <div class="group">
-          <input type="text" id="name" required="required" v-model='sampleApplicant.name'/>
-          <label for="name">Enter your name here</label>
-          <div class="bar"></div>
+        <div class='group'>
+          <input type='text' id='name' required v-model='sampleApplicant.name' @keyup.enter='CreateSampleApplicant()'/>
+          <label for='name'>Enter your name here</label>
+          <div class='bar'></div>
         </div>
+      <p>{{ emptyNameString }}</p>
+      <button v-if='applicantCreateButton' class='button -regular center' @click='CreateSampleApplicant()'> Create Sample Applicant</button>
     </div>
-    <button class='button -regular center' @click='CreateSampleApplicant()'> Create Sample Applicant</button>
-    <p v-show="assignTestSuccess">Sample applicant successfully registered! Click <a class='test-link' @click='LoadToken()'>here</a> to start the test</p>
+    <p v-if='assignTestSuccess'>Sample applicant successfully registered! Click <a class='test-link' @click='LoadToken()'>here</a> to start the test</p>
     <h1 v-show='tokenInvalid'>Token Invalid!</h1>
     <div class = 'test-and-countdown' v-show='tokenValid'>
       <div class='countdown' v-if='showTest'>
@@ -29,11 +30,12 @@ import CountdownComponent from '@/components/AptitudeTest/Countdown.vue';
 export default {
   data() {
     return {
-      // tokenInput: '',
       showTest: false,
       tokenValid: false,
       tokenInvalid: false,
       assignTestSuccess: false,
+      applicantCreateButton: true,
+      emptyNameString: '',
       sampleApplicant: {
         name: '',
         jobtitleApplied: 'Sample Applicant',
@@ -53,6 +55,8 @@ export default {
           (res) => {
             this.showTest = true;
             this.tokenValid = true;
+            this.assignTestSuccess = false;
+            this.applicantCreateButton = false;
             // this.tokenInput = this.$store.state.testToken;
           },
           (err) => {
@@ -62,16 +66,20 @@ export default {
       });
     },
     CreateSampleApplicant() {
-      if(this.sampleApplicant.name) {
-        return new Promise((resolve,reject) => {
-          this.$store.dispatch('CREATE_SAMPLE_APPLICANT',this.sampleApplicant)
-          .then((res) => {
-            this.$store.dispatch('ASSIGN_SAMPLE_APPLICANT_TEST');
-            this.assignTestSuccess =  true;
-            resolve(res);
-          })
-          .catch(reject);
+      if (this.sampleApplicant.name) {
+        return new Promise((resolve, reject) => {
+          this.$store.dispatch('CREATE_SAMPLE_APPLICANT', this.sampleApplicant)
+            .then((res) => {
+              this.$store.dispatch('ASSIGN_SAMPLE_APPLICANT_TEST');
+              this.assignTestSuccess = true;
+              this.emptyNameString = '';
+              resolve(res);
+            })
+            .catch(reject);
         });
+      }
+      if (this.sampleApplicant.name === '') {
+        this.emptyNameString = 'Name cannot be empty';
       }
     },
   },
@@ -96,7 +104,7 @@ export default {
 }
 
 .test-link {
-  color: red;
+  color: rgb(68, 185, 82);
 }
 
 .applicant-input {
@@ -116,6 +124,10 @@ export default {
   textarea {
     width: 80%;
   }
+}
+
+.countdown {
+  text-align: center;
 }
 
 .button-container {
@@ -237,15 +249,15 @@ input {
       font: 700 $width/25 Roboto;
       color: $secondary-color;
     }
-    
-      
+
+
     ~ .bar:before {
     transform: translateX(0);
     }
   }
 
   // Stop Chrome's hideous pale yellow background on auto-fill
-  
+
   &:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px $main-color inset;
     -webkit-text-fill-color: white !important;
@@ -272,7 +284,7 @@ input {
     height: 150%;
     background: $secondary-color;
     transform: translateX(-100%);
-    
+
   }
 }
 ::selection {background: rgba($secondary-color, .3);}

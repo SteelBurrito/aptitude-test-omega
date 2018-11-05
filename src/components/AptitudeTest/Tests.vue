@@ -1,6 +1,6 @@
 <template>
     <div class='container'>
-      <div class='test-container'>
+      <div class='test-container' v-if="showTest">
         <form class='control-group'>
             <p>Question {{ currentQuestion + 1 }} of {{ testQuestions.length }}</p>
             <h1>{{ testQuestions[currentQuestion] }}</h1>
@@ -14,9 +14,18 @@
             <div class='button-container'>
                 <button type = 'button' class='button -regular center' v-if='currentQuestion > 0' v-on:click='PreviousQuestion()'>Previous Question</button>
                 <button type = 'button' class='button -regular center' v-if='currentQuestion < (testQuestions.length - 1)' v-on:click='NextQuestion()'>Next Question</button>
-                <button class='button -submit center' v-show='submitButton'> Submit Results </button>
+                <button type = 'button' class='button -submit center' v-show='submitButton' @click='SubmitAnswers()'> Submit Results </button>
             </div>
         </form>
+      </div>
+      <div class='submission-success' v-if='!showTest'>
+        <div class='success' v-if='submissionSuccess'>
+          <p>Test successfully submitted!</p>
+        </div>
+        <div class='fail' v-else>
+          <p>Oh no! Something went wrong during submission</p>
+          <p>Refresh the page if you still wish to try again.</p>
+        </div>
       </div>
     </div>
 </template>
@@ -36,6 +45,8 @@ export default {
       questionToDisplay: [],
       response: '',
       mcq: [],
+      submissionSuccess: false,
+      showTest: true,
     };
   },
   computed: {
@@ -86,6 +97,19 @@ export default {
           break;
         }
       }
+    },
+    SubmitAnswers(){
+      return new Promise((resolve,reject) => {
+        this.$store.dispatch('SUBMIT_APPLICANT_ANSWERS', this.answersToSubmit)
+        .then((res) => {
+          this.showTest = false;
+          this.submissionSuccess = true;
+          resolve(res);
+        }, (err) => {
+          this.showTest = false;
+          this.submissionSuccess = false;
+        }).catch(reject);
+      });
     },
   },
 };

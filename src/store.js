@@ -11,6 +11,7 @@ const state = {
   testID: '',
   tokenExpiry: '',
   sampleApplicant: '',
+  applicantResults: [],
 };
 
 const mutations = {
@@ -31,6 +32,9 @@ const mutations = {
   },
   SET_APPLICANT_SAMPLE(state, applicant) {
     state.sampleApplicant = applicant;
+  },
+  STORE_RESULTS(state, answers) {
+    state.applicantResults = answers;
   },
 };
 
@@ -103,6 +107,18 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios.get('https://aptitudetestapibyome.ga/applicants/generate/5b9b1781174fb73f788f312a').then((res) => {
         commit('SET_TOKEN', res.data.token);
+        resolve(res);
+      }, (err) => {
+        reject(err);
+      });
+    });
+  },
+  SUBMIT_APPLICANT_ANSWERS({ commit }, submission) {
+    return new Promise((resolve, reject) => {
+      axios.put(`https://aptitudetestapibyome.ga/applicants/submit/${state.testToken}`, {
+        results: submission,
+      }).then((res) => {
+        commit('STORE_RESULTS', submission);
         resolve(res);
       }, (err) => {
         reject(err);
