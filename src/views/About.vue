@@ -3,13 +3,14 @@
     <div class='input-container'>
         <h2>Aptitude Test Demo</h2>
         <div class='group'>
-          <input type='text' id='name' required v-model='sampleApplicant.name' @keyup.enter='CreateSampleApplicant()'/>
+          <input type='text' id='name' required v-model='sampleApplicant.name' @keyup.enter='loadingApplicant = true;CreateSampleApplicant()'/>
           <label for='name'>Enter your name here</label>
           <div class='bar'></div>
         </div>
       <p>{{ emptyNameString }}</p>
-      <button v-if='applicantCreateButton' class='button -regular center' @click='loadingApplicant = true;CreateSampleApplicant()'> Create Sample Applicant</button>
-      <div class="loading-spinner" v-if='loadingApplicant'></div>
+      <button v-if='applicantCreateButton' class='button -regular center' @click.once='loadingApplicant = true;CreateSampleApplicant()'> Create Sample Applicant</button>
+      <br>
+      <div class="loading-spinner" v-if='loadingApplicant && !assignTestSuccess'></div>
       <p v-if='assignTestSuccess'>Sample applicant successfully registered! Click <a class='test-link' @click='LoadToken()'>here</a> to start the test</p>
     </div>
     <h1 v-show='tokenInvalid'>Token Invalid!</h1>
@@ -53,6 +54,7 @@ export default {
             this.showTest = true;
             this.tokenValid = true;
             this.assignTestSuccess = false;
+            this.loadingApplicant = false;
             this.applicantCreateButton = false;
             // this.tokenInput = this.$store.state.testToken;
           },
@@ -70,7 +72,6 @@ export default {
               this.$store.dispatch('ASSIGN_SAMPLE_APPLICANT_TEST');
               this.assignTestSuccess = true;
               this.emptyNameString = '';
-              this.loadingApplicant = false;
               resolve(res);
             })
             .catch(reject);
