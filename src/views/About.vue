@@ -37,7 +37,7 @@ export default {
       emptyNameString: '',
       sampleApplicant: {
         name: '',
-        jobtitleApplied: 'Sample Applicant',
+        jobtitleApplied: 'Presentation Demo',
         email: 'mailo@gmail.com',
       },
     };
