@@ -56,7 +56,7 @@ const actions = {
   ASSIGN_SAMPLE_APPLICANT_TEST() {
     return new Promise((resolve, reject) => {
       axios.put(`https://aptitudetestapibyome.ga/applicants/${state.sampleApplicant._id}`, {
-        aptitudeTest: '5bd3a833b123f42368645bf6',
+        aptitudeTest: '5be3ea706afee74a26c60135',
       }).then((res) => {
         resolve(res);
       }, (err) => {
