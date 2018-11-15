@@ -10,7 +10,6 @@
     <div class='hello' v-show='tokenValid'>
       <h1>Aptitude Test For:</h1>
       <h1>{{ title }}</h1>
-      <CountdownComponent></CountdownComponent>
       <div class='button-container' v-show='!hideStartButton'>
         <button class='button -regular center' @click='showTest=true; hideStartButton=true'>
           Lets Go!
@@ -63,12 +62,27 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.home {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.hello {
+  h1 {
+    text-align: center;
+  }
+}
+
 .button-container {
   display: flex;
   margin: 60px auto;
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .button {
   display: flex;
   overflow: hidden;
@@ -123,8 +137,6 @@ export default {
 }
 .testComponent {
   display: flex;
-  width: 100%;
-  height: 100vh;
   flex-direction: row;
   justify-content: center;
 }
