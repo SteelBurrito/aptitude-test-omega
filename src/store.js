@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
+const _sample = require('lodash.sample');
 
 Vue.use(Vuex);
 
@@ -41,7 +42,7 @@ const mutations = {
 const actions = {
   CREATE_SAMPLE_APPLICANT({ commit }, applicant) {
     return new Promise((resolve, reject) => {
-      axios.post(`${process.env}/applicants`, {
+      axios.post(`${process.env.VUE_APP_API}/applicants`, {
         name: applicant.name,
         jobtitleApplied: applicant.jobtitleApplied,
         email: applicant.email,
@@ -54,19 +55,23 @@ const actions = {
     });
   },
   ASSIGN_SAMPLE_APPLICANT_TEST() {
+    // assign applicant a random test if test exists
     return new Promise((resolve, reject) => {
-      axios.put(`${process.env}/applicants/${state.sampleApplicant._id}`, {
-        aptitudeTest: '5be3ea706afee74a26c60135',
-      }).then((res) => {
-        resolve(res);
-      }, (err) => {
-        reject(err);
+      axios.get(`${process.env.VUE_APP_API}/tests`).then((res) => {
+        if (res.data.length === 0) reject();
+        axios.put(`${process.env.VUE_APP_API}/applicants/${state.sampleApplicant._id}`, {
+          aptitudeTest: _sample(res.data)._id,
+        }).then((res) => {
+          resolve(res);
+        }, (err) => {
+          reject(err);
+        });
       });
     });
   },
   GENERATE_TOKEN({ commit }) {
     return new Promise((resolve, reject) => {
-      axios.get(`${process.env}/applicants/generate/${state.sampleApplicant._id}`).then((res) => {
+      axios.get(`${process.env.VUE_APP_API}/applicants/generate/${state.sampleApplicant._id}`).then((res) => {
         commit('SET_TOKEN', res.data.token);
         resolve(res);
       }, (err) => {
@@ -76,7 +81,7 @@ const actions = {
   },
   VERIFY_TOKEN_AND_RETRIEVE_TEST({ commit }) {
     return new Promise((resolve, reject) => {
-      axios.get(`${process.env}/tests/applicant-aptitude-test/${state.testToken}`, {
+      axios.get(`${process.env.VUE_APP_API}/tests/applicant-aptitude-test/${state.testToken}`, {
       }).then((res) => {
         commit('RECEIVE_TEST', res.data);
         resolve(res);
@@ -87,7 +92,7 @@ const actions = {
   },
   RETRIEVE_TEST({ commit }) {
     return new Promise((resolve, reject) => {
-      axios.get(`${process.env}/tests`, {
+      axios.get(`${process.env.VUE_APP_API}/tests`, {
         params: {
           testID: state.testID,
         },
@@ -105,7 +110,7 @@ const actions = {
   },
   GENERATE_SAMPLE_TOKEN({ commit }) {
     return new Promise((resolve, reject) => {
-      axios.get(`${process.env}/applicants/generate/5b9b1781174fb73f788f312a`).then((res) => {
+      axios.get(`${process.env.VUE_APP_API}/applicants/generate/5b9b1781174fb73f788f312a`).then((res) => {
         commit('SET_TOKEN', res.data.token);
         resolve(res);
       }, (err) => {
@@ -115,7 +120,7 @@ const actions = {
   },
   SUBMIT_APPLICANT_ANSWERS({ commit }, submission) {
     return new Promise((resolve, reject) => {
-      axios.put(`${process.env}/applicants/submit/${state.testToken}`, {
+      axios.put(`${process.env.VUE_APP_API}/applicants/submit/${state.testToken}`, {
         results: submission,
       }).then((res) => {
         commit('STORE_RESULTS', submission);
